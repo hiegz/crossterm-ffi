@@ -23,3 +23,5 @@ add_custom_target(
     crossterm_rs ALL
     cargo build --release
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/crossterm-rs)
+
+add_subdirectory(tests)
