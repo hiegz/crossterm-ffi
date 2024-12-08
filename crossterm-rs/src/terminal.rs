@@ -5,7 +5,7 @@ use crate::stream::crossterm_stream;
 pub unsafe extern "C" fn crossterm_enter_alternate_screen(
     stream: *mut crossterm_stream,
 ) -> libc::c_int {
-    let ret = crossterm::queue!(*stream, crossterm::terminal::EnterAlternateScreen);
+    let ret = crossterm::queue!((&mut *stream), crossterm::terminal::EnterAlternateScreen);
     if let Err(err) = ret {
         -(crossterm_error::from(err) as i32)
     } else {
@@ -17,7 +17,7 @@ pub unsafe extern "C" fn crossterm_enter_alternate_screen(
 pub unsafe extern "C" fn crossterm_leave_alternate_screen(
     stream: *mut crossterm_stream,
 ) -> libc::c_int {
-    let ret = crossterm::queue!(*stream, crossterm::terminal::LeaveAlternateScreen);
+    let ret = crossterm::queue!((&mut *stream), crossterm::terminal::LeaveAlternateScreen);
     if let Err(err) = ret {
         -(crossterm_error::from(err) as i32)
     } else {
