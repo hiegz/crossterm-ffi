@@ -30,3 +30,5 @@ endfunction()
 
 add_crossterm_example(EXAMPLE_NAME alternate-screen EXAMPLE_SOURCES alternate_screen.c)
 add_crossterm_example(EXAMPLE_NAME bad-alternate-screen EXAMPLE_SOURCES bad_alternate_screen.c)
+add_crossterm_example(EXAMPLE_NAME scroll-up EXAMPLE_SOURCES scroll_up.c)
+add_crossterm_example(EXAMPLE_NAME scroll-down EXAMPLE_SOURCES scroll_down.c)
