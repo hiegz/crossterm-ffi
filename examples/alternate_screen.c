@@ -20,13 +20,8 @@ int main(int argc, char *argv[]) {
     }
     rt = crossterm_enter_alternate_screen(stream);
     if (0 != rt) {
-        int eos = errno;
-        fprintf(stdout, "Unable to enter alternate screen : ");
-        if (-rt == CROSSTERM_EOS) {
-            fprintf(stdout, "%s\n", strerror(eos));
-        } else {
-            fprintf(stdout, "undefined error\n");
-        }
+        fprintf(stderr, "Unable to enter alternate screen : %s\n",
+                crossterm_strerror(-rt));
         crossterm_stream_free(stream);
         return 1;
     }
@@ -35,13 +30,8 @@ int main(int argc, char *argv[]) {
     sleep(1);
     rt = crossterm_leave_alternate_screen(stream);
     if (0 != rt) {
-        int eos = errno;
-        fprintf(stdout, "Unable to leave alternate screen : ");
-        if (-rt == CROSSTERM_EOS) {
-            fprintf(stdout, "%s\n", strerror(eos));
-        } else {
-            fprintf(stdout, "undefined error\n");
-        }
+        fprintf(stderr, "Unable to leave alternate screen : %s\n",
+                crossterm_strerror(-rt));
         crossterm_stream_free(stream);
         return 1;
     }

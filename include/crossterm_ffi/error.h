@@ -8,4 +8,6 @@ enum crossterm_error {
     CROSSTERM_EOS,
 };
 
+const char *crossterm_strerror(enum crossterm_error error);
+
 #endif
