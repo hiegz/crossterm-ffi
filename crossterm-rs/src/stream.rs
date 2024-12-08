@@ -52,12 +52,7 @@ pub unsafe extern "C" fn crossterm_stream_flush(stream: *mut crossterm_stream) -
     let stream = &mut *stream as &mut dyn std::io::Write;
     let result = stream.flush();
     if let Err(err) = result {
-        if let Some(eos) = err.raw_os_error() {
-            *libc::__errno_location() = eos;
-            return -(crossterm_error::CROSSTERM_EOS as i32);
-        } else {
-            return -(crossterm_error::CROSSTERM_EUNDEF as i32);
-        }
+        -(crossterm_error::from(err) as i32)
     } else {
         0
     }
