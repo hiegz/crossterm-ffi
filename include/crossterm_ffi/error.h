@@ -4,6 +4,8 @@
 /// @brief Crossterm error type.
 enum crossterm_error {
     CROSSTERM_SUCCESS = 0,
+    CROSSTERM_EUNDEF,
+    CROSSTERM_EOS,
 };
 
 #endif

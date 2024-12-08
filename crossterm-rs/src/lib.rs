@@ -2,3 +2,4 @@
 
 mod error;
 mod stream;
+mod terminal;
