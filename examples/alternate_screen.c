@@ -2,6 +2,7 @@
 #include <crossterm_ffi/stream.h>
 #include <crossterm_ffi/terminal.h>
 
+#include <assert.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +30,8 @@ int main(int argc, char *argv[]) {
         crossterm_stream_free(stream);
         return 1;
     }
+    rt = crossterm_stream_flush(stream);
+    assert(0 == rt);
     sleep(1);
     rt = crossterm_leave_alternate_screen(stream);
     if (0 != rt) {
@@ -42,6 +45,8 @@ int main(int argc, char *argv[]) {
         crossterm_stream_free(stream);
         return 1;
     }
+    rt = crossterm_stream_flush(stream);
+    assert(0 == rt);
     crossterm_stream_free(stream);
     return 0;
 }

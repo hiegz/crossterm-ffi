@@ -1,5 +1,7 @@
 use libc;
 
+use crate::error::crossterm_error;
+
 #[repr(C)]
 pub struct crossterm_stream {
     stream: *mut libc::FILE,
@@ -43,6 +45,22 @@ pub unsafe extern "C" fn crossterm_stream_new(file: *mut libc::FILE) -> *mut cro
     }
     (*stream).stream = file;
     return stream;
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_stream_flush(stream: *mut crossterm_stream) -> libc::c_int {
+    let stream = &mut *stream as &mut dyn std::io::Write;
+    let result = stream.flush();
+    if let Err(err) = result {
+        if let Some(eos) = err.raw_os_error() {
+            *libc::__errno_location() = eos;
+            return -(crossterm_error::CROSSTERM_EOS as i32);
+        } else {
+            return -(crossterm_error::CROSSTERM_EUNDEF as i32);
+        }
+    } else {
+        0
+    }
 }
 
 #[no_mangle]
