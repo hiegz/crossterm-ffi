@@ -2,6 +2,26 @@ use crate::error::crossterm_error;
 use crate::stream::crossterm_stream;
 
 #[no_mangle]
+pub unsafe extern "C" fn crossterm_enable_raw_mode() -> libc::c_int {
+    let ret = crossterm::terminal::enable_raw_mode();
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        0
+    }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_disable_raw_mode() -> libc::c_int {
+    let ret = crossterm::terminal::disable_raw_mode();
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        0
+    }
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn crossterm_enter_alternate_screen(
     stream: *mut crossterm_stream,
 ) -> libc::c_int {

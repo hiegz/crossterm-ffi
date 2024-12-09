@@ -5,6 +5,8 @@
 
 struct crossterm_stream;
 
+int crossterm_enable_raw_mode(void);
+int crossterm_disable_raw_mode(void);
 int crossterm_enter_alternate_screen(struct crossterm_stream *stream);
 int crossterm_leave_alternate_screen(struct crossterm_stream *stream);
 int crossterm_enable_line_wrap(struct crossterm_stream *stream);
