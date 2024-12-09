@@ -26,6 +26,26 @@ pub unsafe extern "C" fn crossterm_leave_alternate_screen(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn crossterm_enable_line_wrap(stream: *mut crossterm_stream) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), crossterm::terminal::EnableLineWrap);
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        0
+    }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_disable_line_wrap(stream: *mut crossterm_stream) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), crossterm::terminal::DisableLineWrap);
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        0
+    }
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn crossterm_scroll_up(
     stream: *mut crossterm_stream,
     nlines: u16,

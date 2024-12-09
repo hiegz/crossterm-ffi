@@ -7,6 +7,8 @@ struct crossterm_stream;
 
 int crossterm_enter_alternate_screen(struct crossterm_stream *stream);
 int crossterm_leave_alternate_screen(struct crossterm_stream *stream);
+int crossterm_enable_line_wrap(struct crossterm_stream *stream);
+int crossterm_disable_line_wrap(struct crossterm_stream *stream);
 int crossterm_scroll_up(struct crossterm_stream *stream, uint16_t nlines);
 int crossterm_scroll_down(struct crossterm_stream *stream, uint16_t nlines);
 int crossterm_clear_all(struct crossterm_stream *stream);
