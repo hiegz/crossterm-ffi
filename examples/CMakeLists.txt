@@ -32,3 +32,7 @@ add_crossterm_example(EXAMPLE_NAME alternate-screen EXAMPLE_SOURCES alternate_sc
 add_crossterm_example(EXAMPLE_NAME bad-alternate-screen EXAMPLE_SOURCES bad_alternate_screen.c)
 add_crossterm_example(EXAMPLE_NAME scroll-up EXAMPLE_SOURCES scroll_up.c)
 add_crossterm_example(EXAMPLE_NAME scroll-down EXAMPLE_SOURCES scroll_down.c)
+add_crossterm_example(EXAMPLE_NAME clear-all EXAMPLE_SOURCES clear_all.c)
+add_crossterm_example(EXAMPLE_NAME clear-purge EXAMPLE_SOURCES clear_purge.c)
+add_crossterm_example(EXAMPLE_NAME clear-from-cursor-up EXAMPLE_SOURCES clear_from_cursor_up.c)
+add_crossterm_example(EXAMPLE_NAME clear-current-line EXAMPLE_SOURCES clear_current_line.c)
