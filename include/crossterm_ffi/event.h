@@ -51,17 +51,35 @@ enum crossterm_special_key {
     CROSSTERM_F12_KEY,
 };
 
-struct crossterm_event_executor {
-    crossterm_character_key_event_handler character_key_event_handler;
-    crossterm_special_key_event_handler   special_key_event_handler;
-    crossterm_resize_event_handler        resize_event_handler;
+struct crossterm_event_handler_registry;
 
-    void *handler_data;
-};
+struct crossterm_event_handler_registry *crossterm_event_handler_registry_new(void);
+void crossterm_event_handler_registry_free(struct crossterm_event_handler_registry *);
 
-void crossterm_event_executor_init(struct crossterm_event_executor *event_executor);
-int  crossterm_event_execute(struct crossterm_event_executor *event_executor);
-int  crossterm_event_poll(int *is_available);
+void crossterm_register_character_key_event_handler(
+    struct crossterm_event_handler_registry *,
+    crossterm_character_key_event_handler character_key_event_handler);
+void crossterm_deregister_character_key_event_handler(
+    struct crossterm_event_handler_registry *);
+
+void crossterm_register_special_key_event_handler(
+    struct crossterm_event_handler_registry *,
+    crossterm_special_key_event_handler special_key_event_handler);
+void crossterm_deregister_special_key_event_handler(
+    struct crossterm_event_handler_registry *);
+
+void crossterm_register_resize_event_handler(
+    struct crossterm_event_handler_registry *,
+    crossterm_resize_event_handler resize_event_handler);
+void crossterm_deregister_resize_event_handler(
+    struct crossterm_event_handler_registry *);
+
+void crossterm_set_event_handler_data(
+    struct crossterm_event_handler_registry *,
+    void *handler_data);
+
+int crossterm_event_read(struct crossterm_event_handler_registry *);
+int crossterm_event_poll(int *is_available);
 
 // clang-format on
 #endif

@@ -58,12 +58,12 @@ pub enum crossterm_special_key {
 }
 
 #[repr(C)]
-pub struct crossterm_event_executor {
-    pub character_key_event_handler: crossterm_character_key_event_handler,
-    pub special_key_event_handler: crossterm_special_key_event_handler,
-    pub resize_event_handler: crossterm_resize_event_handler,
+pub struct crossterm_event_handler_registry {
+    character_key_event_handler: crossterm_character_key_event_handler,
+    special_key_event_handler: crossterm_special_key_event_handler,
+    resize_event_handler: crossterm_resize_event_handler,
 
-    pub handler_data: *mut libc::c_void,
+    handler_data: *mut libc::c_void,
 }
 
 fn pack_key_modifiers(
@@ -104,7 +104,7 @@ fn pack_key_modifiers(
     return res;
 }
 
-impl crossterm_event_executor {
+impl crossterm_event_handler_registry {
     #[rustfmt::skip]
     pub unsafe fn maybe_execute_key_event(&self, event: crossterm::event::KeyEvent) {
         use crossterm::event::KeyCode::*;
@@ -175,31 +175,91 @@ impl crossterm_event_executor {
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn crossterm_event_executor_init(
-    event_executor: *mut crossterm_event_executor,
-) {
-    libc::memset(
-        event_executor as *mut libc::c_void,
-        0x00,
-        size_of::<crossterm_event_executor>(),
-    );
+pub unsafe extern "C" fn crossterm_event_handler_registry_new(
+) -> *mut crossterm_event_handler_registry {
+    let event_registry_size = size_of::<crossterm_event_handler_registry>();
+    let event_registry = libc::malloc(event_registry_size);
+    libc::memset(event_registry, 0x00, event_registry_size);
+    return event_registry as *mut crossterm_event_handler_registry;
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn crossterm_event_execute(
-    event_executor: *mut crossterm_event_executor,
+pub unsafe extern "C" fn crossterm_event_handler_registry_free(
+    event_registry: *mut crossterm_event_handler_registry,
+) {
+    libc::free(event_registry as *mut libc::c_void);
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_register_character_key_event_handler(
+    event_registry: *mut crossterm_event_handler_registry,
+    character_key_event_handler: crossterm_character_key_event_handler,
+) {
+    (&mut *event_registry).character_key_event_handler = character_key_event_handler;
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_deregister_character_key_event_handler(
+    event_registry: *mut crossterm_event_handler_registry,
+) {
+    (&mut *event_registry).character_key_event_handler = None;
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_register_special_key_event_handler(
+    event_registry: *mut crossterm_event_handler_registry,
+    special_key_event_handler: crossterm_special_key_event_handler,
+) {
+    (&mut *event_registry).special_key_event_handler = special_key_event_handler;
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_deregister_special_key_event_handler(
+    event_registry: *mut crossterm_event_handler_registry,
+) {
+    (&mut *event_registry).special_key_event_handler = None;
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_register_resize_event_handler(
+    event_registry: *mut crossterm_event_handler_registry,
+    resize_event_handler: crossterm_resize_event_handler,
+) {
+    (&mut *event_registry).resize_event_handler = resize_event_handler;
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_deregister_resize_event_handler(
+    event_registry: *mut crossterm_event_handler_registry,
+) {
+    (&mut *event_registry).resize_event_handler = None;
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_set_event_handler_data(
+    event_registry: *mut crossterm_event_handler_registry,
+    handler_data: *mut libc::c_void,
+) {
+    (&mut *event_registry).handler_data = handler_data;
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_event_read(
+    event_registry: *mut crossterm_event_handler_registry,
 ) -> libc::c_int {
     use crossterm::event::Event::*;
 
+    let event_registry = &*event_registry;
     let ret = crossterm::event::read();
+
     match ret {
         Ok(ev) => match ev {
             FocusGained => {}
             FocusLost => {}
-            Key(kev) => (&*event_executor).maybe_execute_key_event(kev),
+            Key(kev) => event_registry.maybe_execute_key_event(kev),
             Mouse(_) => {}
             Paste(_) => {}
-            Resize(rows, cols) => (&*event_executor).maybe_execute_resize_event(rows, cols),
+            Resize(rows, cols) => event_registry.maybe_execute_resize_event(rows, cols),
         },
         Err(err) => return -(crossterm_error::from(err) as i32),
     }
