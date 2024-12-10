@@ -5,80 +5,66 @@ use crate::error::crossterm_error;
 #[rustfmt::skip]
 mod unformatted {
 
-pub const CROSSTERM_NO_KEY_MODIFIERS:        u16 = 0b0000000000000000;
-pub const CROSSTERM_CONTROL_KEY_MODIFIER:    u16 = 0b0000000000000001;
-pub const CROSSTERM_SHIFT_KEY_MODIFIER:      u16 = 0b0000000000000010;
-pub const CROSSTERM_ALT_KEY_MODIFIER:        u16 = 0b0000000000000100;
-pub const CROSSTERM_CAPS_LOCK_KEY_MODIFIER:  u16 = 0b0000000000001000;
-pub const CROSSTERM_NUM_LOCK_KEY_MODIFIER:   u16 = 0b0000000000010000;
-pub const CROSSTERM_KEYPAD_KEY_MODIFIER:     u16 = 0b0000000000100000;
-pub const CROSSTERM_SUPER_KEY_MODIFIER:      u16 = 0b0000000001000000;
-pub const CROSSTERM_HYPER_KEY_MODIFIER:      u16 = 0b0000000010000000;
-pub const CROSSTERM_META_KEY_MODIFIER:       u16 = 0b0000000100000000;
-pub const CROSSTERM_ALL_KEY_MODIFIERS:       u16 = 0b0000000111111111;
+pub const CROSSTERM_NO_KEY_MODIFIERS:       u16 = 0b0000000000000000;
+pub const CROSSTERM_CONTROL_KEY_MODIFIER:   u16 = 0b0000000000000001;
+pub const CROSSTERM_SHIFT_KEY_MODIFIER:     u16 = 0b0000000000000010;
+pub const CROSSTERM_ALT_KEY_MODIFIER:       u16 = 0b0000000000000100;
+pub const CROSSTERM_CAPS_LOCK_KEY_MODIFIER: u16 = 0b0000000000001000;
+pub const CROSSTERM_NUM_LOCK_KEY_MODIFIER:  u16 = 0b0000000000010000;
+pub const CROSSTERM_KEYPAD_KEY_MODIFIER:    u16 = 0b0000000000100000;
+pub const CROSSTERM_SUPER_KEY_MODIFIER:     u16 = 0b0000000001000000;
+pub const CROSSTERM_HYPER_KEY_MODIFIER:     u16 = 0b0000000010000000;
+pub const CROSSTERM_META_KEY_MODIFIER:      u16 = 0b0000000100000000;
+pub const CROSSTERM_ALL_KEY_MODIFIERS:      u16 = 0b0000000111111111;
 
-pub type crossterm_character_key_event_handler   = Option<unsafe extern "C" fn(u32, u16, *mut libc::c_void)>;
-pub type crossterm_f_key_event_handler           = Option<unsafe extern "C" fn (u8, u16, *mut libc::c_void)>;
-pub type crossterm_backspace_key_event_handler   = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_enter_key_event_handler       = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_left_arrow_key_event_handler  = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_right_arrow_key_event_handler = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_up_arrow_key_event_handler    = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_down_arrow_key_event_handler  = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_home_key_event_handler        = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_end_key_event_handler         = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_page_up_key_event_handler     = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_page_down_key_event_handler   = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_tab_key_event_handler         = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_backtab_key_event_handler     = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_delete_key_event_handler      = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_insert_key_event_handler      = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_escape_key_event_handler      = Option<unsafe extern "C" fn     (u16, *mut libc::c_void)>;
-pub type crossterm_resize_event_handler          = Option<unsafe extern "C" fn(u16, u16, *mut libc::c_void)>;
-
-#[repr(C)]
-pub struct crossterm_event_executor {
-    pub character_key_event_handler:         crossterm_character_key_event_handler,
-    pub character_key_event_handler_token:   *mut libc::c_void,
-    pub f_key_event_handler:                 crossterm_f_key_event_handler,
-    pub f_key_event_handler_token:           *mut libc::c_void,
-    pub backspace_key_event_handler:         crossterm_backspace_key_event_handler,
-    pub backspace_key_event_handler_token:   *mut libc::c_void,
-    pub enter_key_event_handler:             crossterm_enter_key_event_handler,
-    pub enter_key_event_handler_token:       *mut libc::c_void,
-    pub left_arrow_key_event_handler:        crossterm_left_arrow_key_event_handler,
-    pub left_arrow_key_event_handler_token:  *mut libc::c_void,   
-    pub right_arrow_key_event_handler:       crossterm_right_arrow_key_event_handler,
-    pub right_arrow_key_event_handler_token: *mut libc::c_void,
-    pub up_arrow_key_event_handler:          crossterm_up_arrow_key_event_handler,
-    pub up_arrow_key_event_handler_token:    *mut libc::c_void,
-    pub down_arrow_key_event_handler:        crossterm_down_arrow_key_event_handler,
-    pub down_arrow_key_event_handler_token:  *mut libc::c_void,
-    pub home_key_event_handler:              crossterm_home_key_event_handler,
-    pub home_key_event_handler_token:        *mut libc::c_void,
-    pub end_key_event_handler:               crossterm_end_key_event_handler,
-    pub end_key_event_handler_token:         *mut libc::c_void,
-    pub page_up_key_event_handler:           crossterm_page_up_key_event_handler,
-    pub page_up_key_event_handler_token:     *mut libc::c_void,
-    pub page_down_key_event_handler:         crossterm_page_down_key_event_handler,
-    pub page_down_key_event_handler_token:   *mut libc::c_void,
-    pub tab_key_event_handler:               crossterm_tab_key_event_handler,
-    pub tab_key_event_handler_token:         *mut libc::c_void,
-    pub backtab_key_event_handler:           crossterm_backtab_key_event_handler,
-    pub backtab_key_event_handler_token:     *mut libc::c_void,
-    pub delete_key_event_handler:            crossterm_delete_key_event_handler,
-    pub delete_key_event_handler_token:      *mut libc::c_void,
-    pub insert_key_event_handler:            crossterm_insert_key_event_handler,
-    pub insert_key_event_handler_token:      *mut libc::c_void,
-    pub escape_key_event_handler:            crossterm_escape_key_event_handler,
-    pub escape_key_event_handler_token:      *mut libc::c_void,
-    pub resize_event_handler:                crossterm_resize_event_handler,
-    pub resize_event_handler_token:          *mut libc::c_void,
-}
+pub type crossterm_character_key_event_handler  = Option<unsafe extern "C" fn(u32, u16, *mut libc::c_void)>;
+pub type crossterm_special_key_event_handler    = Option<unsafe extern "C" fn (u8, u16, *mut libc::c_void)>;
+pub type crossterm_resize_event_handler         = Option<unsafe extern "C" fn(u16, u16, *mut libc::c_void)>;
 
 }
 
 pub use unformatted::*;
+
+#[repr(C)]
+pub enum crossterm_special_key {
+    CROSSTERM_BACKSPACE_KEY = 0,
+    CROSSTERM_ENTER_KEY,
+    CROSSTERM_LEFT_ARROW_KEY,
+    CROSSTERM_RIGHT_ARROW_KEY,
+    CROSSTERM_UP_ARROW_KEY,
+    CROSSTERM_DOWN_ARROW_KEY,
+    CROSSTERM_HOME_KEY,
+    CROSSTERM_END_KEY,
+    CROSSTERM_PAGE_UP_KEY,
+    CROSSTERM_PAGE_DOWN_KEY,
+    CROSSTERM_TAB_KEY,
+    CROSSTERM_BACKTAB_KEY,
+    CROSSTERM_DELETE_KEY,
+    CROSSTERM_INSERT_KEY,
+    CROSSTERM_ESCAPE_KEY,
+
+    CROSSTERM_F1_KEY = 244,
+    CROSSTERM_F2_KEY,
+    CROSSTERM_F3_KEY,
+    CROSSTERM_F4_KEY,
+    CROSSTERM_F5_KEY,
+    CROSSTERM_F6_KEY,
+    CROSSTERM_F7_KEY,
+    CROSSTERM_F8_KEY,
+    CROSSTERM_F9_KEY,
+    CROSSTERM_F10_KEY,
+    CROSSTERM_F11_KEY,
+    CROSSTERM_F12_KEY,
+}
+
+#[repr(C)]
+pub struct crossterm_event_executor {
+    pub character_key_event_handler: crossterm_character_key_event_handler,
+    pub special_key_event_handler: crossterm_special_key_event_handler,
+    pub resize_event_handler: crossterm_resize_event_handler,
+
+    pub handler_data: *mut libc::c_void,
+}
 
 fn pack_key_modifiers(
     modifiers: crossterm::event::KeyModifiers,
@@ -119,27 +105,43 @@ fn pack_key_modifiers(
 }
 
 impl crossterm_event_executor {
-    pub unsafe fn execute_key_event(&self, event: crossterm::event::KeyEvent) {
+    #[rustfmt::skip]
+    pub unsafe fn maybe_execute_key_event(&self, event: crossterm::event::KeyEvent) {
         use crossterm::event::KeyCode::*;
+        use crossterm_special_key::*;
+
+        let modifiers = pack_key_modifiers(event.modifiers, event.state);
 
         match event.code {
-            Backspace => self.execute_backspace_key_event(event),
-            Enter => self.execute_enter_key_event(event),
-            Left => self.execute_left_arrow_key_event(event),
-            Right => self.execute_right_arrow_key_event(event),
-            Up => self.execute_up_arrow_key_event(event),
-            Down => self.execute_down_arrow_key_event(event),
-            Home => self.execute_home_key_event(event),
-            End => self.execute_end_key_event(event),
-            PageUp => self.execute_page_up_key_event(event),
-            PageDown => self.execute_page_down_key_event(event),
-            Tab => self.execute_tab_key_event(event),
-            BackTab => self.execute_backtab_key_event(event),
-            Delete => self.execute_delete_key_event(event),
-            Insert => self.execute_insert_key_event(event),
-            F(n) => self.execute_f_key_event(n, event),
-            Char(ch) => self.execute_character_key_event(ch, event),
-            Esc => self.execute_escape_key_event(event),
+            Backspace => self.maybe_execute_special_key_event(CROSSTERM_BACKSPACE_KEY   as u8, modifiers),
+            Enter     => self.maybe_execute_special_key_event(CROSSTERM_ENTER_KEY       as u8, modifiers),
+            Left      => self.maybe_execute_special_key_event(CROSSTERM_LEFT_ARROW_KEY  as u8, modifiers),
+            Right     => self.maybe_execute_special_key_event(CROSSTERM_RIGHT_ARROW_KEY as u8, modifiers),
+            Up        => self.maybe_execute_special_key_event(CROSSTERM_UP_ARROW_KEY    as u8, modifiers),
+            Down      => self.maybe_execute_special_key_event(CROSSTERM_DOWN_ARROW_KEY  as u8, modifiers),
+            Home      => self.maybe_execute_special_key_event(CROSSTERM_HOME_KEY        as u8, modifiers),
+            End       => self.maybe_execute_special_key_event(CROSSTERM_END_KEY         as u8, modifiers),
+            PageUp    => self.maybe_execute_special_key_event(CROSSTERM_PAGE_UP_KEY     as u8, modifiers),
+            PageDown  => self.maybe_execute_special_key_event(CROSSTERM_PAGE_DOWN_KEY   as u8, modifiers),
+            Tab       => self.maybe_execute_special_key_event(CROSSTERM_TAB_KEY         as u8, modifiers),
+            BackTab   => self.maybe_execute_special_key_event(CROSSTERM_BACKTAB_KEY     as u8, modifiers),
+            Delete    => self.maybe_execute_special_key_event(CROSSTERM_DELETE_KEY      as u8, modifiers),
+            Insert    => self.maybe_execute_special_key_event(CROSSTERM_INSERT_KEY      as u8, modifiers),
+            Esc       => self.maybe_execute_special_key_event(CROSSTERM_ESCAPE_KEY      as u8, modifiers),
+            F(1)      => self.maybe_execute_special_key_event(CROSSTERM_F1_KEY          as u8, modifiers),
+            F(2)      => self.maybe_execute_special_key_event(CROSSTERM_F2_KEY          as u8, modifiers),
+            F(3)      => self.maybe_execute_special_key_event(CROSSTERM_F3_KEY          as u8, modifiers),
+            F(4)      => self.maybe_execute_special_key_event(CROSSTERM_F4_KEY          as u8, modifiers),
+            F(5)      => self.maybe_execute_special_key_event(CROSSTERM_F5_KEY          as u8, modifiers),
+            F(6)      => self.maybe_execute_special_key_event(CROSSTERM_F6_KEY          as u8, modifiers),
+            F(7)      => self.maybe_execute_special_key_event(CROSSTERM_F7_KEY          as u8, modifiers),
+            F(8)      => self.maybe_execute_special_key_event(CROSSTERM_F8_KEY          as u8, modifiers),
+            F(9)      => self.maybe_execute_special_key_event(CROSSTERM_F9_KEY          as u8, modifiers),
+            F(10)     => self.maybe_execute_special_key_event(CROSSTERM_F10_KEY         as u8, modifiers),
+            F(11)     => self.maybe_execute_special_key_event(CROSSTERM_F11_KEY         as u8, modifiers),
+            F(12)     => self.maybe_execute_special_key_event(CROSSTERM_F12_KEY         as u8, modifiers),
+            F(_)      => unreachable!("F what?"),
+            Char(ch)  => self.maybe_execute_character_key_event(ch as u32, modifiers),
             Null => {}
             CapsLock => {}
             ScrollLock => {}
@@ -153,185 +155,21 @@ impl crossterm_event_executor {
         }
     }
 
-    pub unsafe fn execute_backspace_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Backspace);
-        if let Some(handler) = &self.backspace_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.backspace_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_enter_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Enter);
-        if let Some(handler) = &self.enter_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.enter_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_left_arrow_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Left);
-        if let Some(handler) = &self.left_arrow_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.left_arrow_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_right_arrow_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Right);
-        if let Some(handler) = &self.right_arrow_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.right_arrow_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_up_arrow_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Up);
-        if let Some(handler) = &self.up_arrow_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.up_arrow_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_down_arrow_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Down);
-        if let Some(handler) = &self.down_arrow_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.down_arrow_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_home_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Home);
-        if let Some(handler) = &self.home_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.home_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_end_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::End);
-        if let Some(handler) = &self.end_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.end_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_page_up_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::PageUp);
-        if let Some(handler) = &self.page_up_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.page_up_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_page_down_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::PageDown);
-        if let Some(handler) = &self.page_down_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.page_down_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_tab_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Tab);
-        if let Some(handler) = &self.tab_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.tab_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_backtab_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::BackTab);
-        if let Some(handler) = &self.backtab_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.backtab_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_delete_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Delete);
-        if let Some(handler) = &self.delete_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.delete_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_insert_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Insert);
-        if let Some(handler) = &self.insert_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.insert_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_f_key_event(&self, n: u8, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::F(n));
-        if let Some(handler) = &self.f_key_event_handler {
-            (handler)(
-                n,
-                pack_key_modifiers(event.modifiers, event.state),
-                self.f_key_event_handler_token,
-            );
-        }
-    }
-
-    pub unsafe fn execute_character_key_event(
-        &self,
-        character: char,
-        event: crossterm::event::KeyEvent,
-    ) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Char(character));
+    pub unsafe fn maybe_execute_character_key_event(&self, character: u32, modifiers: u16) {
         if let Some(handler) = &self.character_key_event_handler {
-            (handler)(
-                character as u32,
-                pack_key_modifiers(event.modifiers, event.state),
-                self.character_key_event_handler_token,
-            );
+            (handler)(character, modifiers, self.handler_data);
         }
     }
 
-    pub unsafe fn execute_escape_key_event(&self, event: crossterm::event::KeyEvent) {
-        assert_eq!(event.code, crossterm::event::KeyCode::Esc);
-        if let Some(handler) = &self.escape_key_event_handler {
-            (handler)(
-                pack_key_modifiers(event.modifiers, event.state),
-                self.escape_key_event_handler_token,
-            );
+    pub unsafe fn maybe_execute_special_key_event(&self, character: u8, modifiers: u16) {
+        if let Some(handler) = &self.special_key_event_handler {
+            (handler)(character, modifiers, self.handler_data);
         }
     }
 
-    pub unsafe fn execute_resize_event(&self, rows: u16, cols: u16) {
+    pub unsafe fn maybe_execute_resize_event(&self, rows: u16, cols: u16) {
         if let Some(handler) = &self.resize_event_handler {
-            (handler)(rows, cols, self.resize_event_handler_token);
+            (handler)(rows, cols, self.handler_data);
         }
     }
 }
@@ -358,10 +196,10 @@ pub unsafe extern "C" fn crossterm_event_execute(
         Ok(ev) => match ev {
             FocusGained => {}
             FocusLost => {}
-            Key(kev) => (&*event_executor).execute_key_event(kev),
+            Key(kev) => (&*event_executor).maybe_execute_key_event(kev),
             Mouse(_) => {}
             Paste(_) => {}
-            Resize(rows, cols) => (&*event_executor).execute_resize_event(rows, cols),
+            Resize(rows, cols) => (&*event_executor).maybe_execute_resize_event(rows, cols),
         },
         Err(err) => return -(crossterm_error::from(err) as i32),
     }
