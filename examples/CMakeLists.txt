@@ -8,7 +8,7 @@ function(add_crossterm_example)
         PARSE_ARGV 0 arg
         "${options}" "${oneValueArgs}" "${multiValueArgs}")
 
-    add_executable(${arg_EXAMPLE_NAME} ${arg_EXAMPLE_SOURCES})
+    add_executable(${arg_EXAMPLE_NAME} EXCLUDE_FROM_ALL ${arg_EXAMPLE_SOURCES})
     add_dependencies(${arg_EXAMPLE_NAME} crossterm_rs)
 
     target_compile_options(

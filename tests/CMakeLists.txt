@@ -10,7 +10,7 @@ function(add_single_file_test)
         PARSE_ARGV 0 arg
         "${options}" "${oneValueArgs}" "${multiValueArgs}")
 
-    add_executable(${arg_TEST_NAME} ${arg_TEST_SOURCES})
+    add_executable(${arg_TEST_NAME} EXCLUDE_FROM_ALL ${arg_TEST_SOURCES})
     add_dependencies(${arg_TEST_NAME} crossterm_rs)
 
     target_compile_options(
