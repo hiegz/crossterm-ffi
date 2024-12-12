@@ -6,15 +6,16 @@ use crate::error::crossterm_error;
 mod unformatted {
 
 pub const CROSSTERM_NO_KEY_MODIFIERS:       u16 = 0b0000000000000000;
-pub const CROSSTERM_CONTROL_KEY_MODIFIER:   u16 = 0b0000000000000001;
-pub const CROSSTERM_SHIFT_KEY_MODIFIER:     u16 = 0b0000000000000010;
+pub const CROSSTERM_SHIFT_KEY_MODIFIER:     u16 = 0b0000000000000001;
+pub const CROSSTERM_CONTROL_KEY_MODIFIER:   u16 = 0b0000000000000010;
 pub const CROSSTERM_ALT_KEY_MODIFIER:       u16 = 0b0000000000000100;
-pub const CROSSTERM_CAPS_LOCK_KEY_MODIFIER: u16 = 0b0000000000001000;
-pub const CROSSTERM_NUM_LOCK_KEY_MODIFIER:  u16 = 0b0000000000010000;
-pub const CROSSTERM_KEYPAD_KEY_MODIFIER:    u16 = 0b0000000000100000;
-pub const CROSSTERM_SUPER_KEY_MODIFIER:     u16 = 0b0000000001000000;
-pub const CROSSTERM_HYPER_KEY_MODIFIER:     u16 = 0b0000000010000000;
-pub const CROSSTERM_META_KEY_MODIFIER:      u16 = 0b0000000100000000;
+pub const CROSSTERM_SUPER_KEY_MODIFIER:     u16 = 0b0000000000001000;
+pub const CROSSTERM_HYPER_KEY_MODIFIER:     u16 = 0b0000000000010000;
+pub const CROSSTERM_META_KEY_MODIFIER:      u16 = 0b0000000000100000;
+pub const CROSSTERM_KEYPAD_KEY_MODIFIER:    u16 = 0b0000000001000000;
+pub const CROSSTERM_CAPS_LOCK_KEY_MODIFIER: u16 = 0b0000000010000000;
+pub const CROSSTERM_NUM_LOCK_KEY_MODIFIER:  u16 = 0b0000000100000000;
+#[allow(dead_code)]
 pub const CROSSTERM_ALL_KEY_MODIFIERS:      u16 = 0b0000000111111111;
 
 pub type crossterm_character_key_event_handler  = Option<unsafe extern "C" fn(u32, u16, *mut libc::c_void)>;
@@ -66,6 +67,7 @@ pub struct crossterm_event_handler_registry {
     handler_data: *mut libc::c_void,
 }
 
+#[rustfmt::skip]
 fn pack_key_modifiers(
     modifiers: crossterm::event::KeyModifiers,
     state: crossterm::event::KeyEventState,
@@ -73,34 +75,20 @@ fn pack_key_modifiers(
     use crossterm::event::KeyEventState;
     use crossterm::event::KeyModifiers;
 
+    assert_eq!(KeyModifiers::SHIFT.bits()      as u16,      CROSSTERM_SHIFT_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::CONTROL.bits()    as u16,      CROSSTERM_CONTROL_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::ALT.bits()        as u16,      CROSSTERM_ALT_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::SUPER.bits()      as u16,      CROSSTERM_SUPER_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::HYPER.bits()      as u16,      CROSSTERM_HYPER_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::META.bits()       as u16,      CROSSTERM_META_KEY_MODIFIER);
+
+    assert_eq!(KeyEventState::KEYPAD.bits()    as u16 >> 7, CROSSTERM_KEYPAD_KEY_MODIFIER);
+    assert_eq!(KeyEventState::CAPS_LOCK.bits() as u16 >> 7, CROSSTERM_CAPS_LOCK_KEY_MODIFIER);
+    assert_eq!(KeyEventState::NUM_LOCK.bits()  as u16 >> 7, CROSSTERM_NUM_LOCK_KEY_MODIFIER);
+
     let mut res = CROSSTERM_NO_KEY_MODIFIERS;
-    if modifiers.contains(KeyModifiers::CONTROL) {
-        res |= CROSSTERM_CONTROL_KEY_MODIFIER;
-    }
-    if modifiers.contains(KeyModifiers::SHIFT) {
-        res |= CROSSTERM_SHIFT_KEY_MODIFIER;
-    }
-    if modifiers.contains(KeyModifiers::ALT) {
-        res |= CROSSTERM_ALT_KEY_MODIFIER;
-    }
-    if modifiers.contains(KeyModifiers::SUPER) {
-        res |= CROSSTERM_SUPER_KEY_MODIFIER;
-    }
-    if modifiers.contains(KeyModifiers::HYPER) {
-        res |= CROSSTERM_HYPER_KEY_MODIFIER;
-    }
-    if modifiers.contains(KeyModifiers::META) {
-        res |= CROSSTERM_META_KEY_MODIFIER;
-    }
-    if state.contains(KeyEventState::KEYPAD) {
-        res |= CROSSTERM_KEYPAD_KEY_MODIFIER;
-    }
-    if state.contains(KeyEventState::CAPS_LOCK) {
-        res |= CROSSTERM_CAPS_LOCK_KEY_MODIFIER;
-    }
-    if state.contains(KeyEventState::NUM_LOCK) {
-        res |= CROSSTERM_NUM_LOCK_KEY_MODIFIER;
-    }
+    res |= modifiers.bits() as u16;
+    res |= (state.bits() as u16) << 7;
     return res;
 }
 
