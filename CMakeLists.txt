@@ -20,7 +20,7 @@ project(crossterm_ffi
         LANGUAGES C)
 
 add_custom_target(
-    crossterm_rs ALL
+    build
     cargo build --release
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/crossterm-rs)
 

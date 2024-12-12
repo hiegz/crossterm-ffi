@@ -9,7 +9,7 @@ function(add_crossterm_example)
         "${options}" "${oneValueArgs}" "${multiValueArgs}")
 
     add_executable(${arg_EXAMPLE_NAME} EXCLUDE_FROM_ALL ${arg_EXAMPLE_SOURCES})
-    add_dependencies(${arg_EXAMPLE_NAME} crossterm_rs)
+    add_dependencies(${arg_EXAMPLE_NAME} build)
 
     target_compile_options(
         ${arg_EXAMPLE_NAME}
