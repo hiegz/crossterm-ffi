@@ -26,3 +26,13 @@ add_custom_target(
 
 add_subdirectory(examples)
 add_subdirectory(tests)
+
+include(GNUInstallDirs)
+
+install(
+    FILES crossterm-rs/target/release/libcrossterm_ffi.a
+    DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(
+    DIRECTORY include/crossterm_ffi
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
