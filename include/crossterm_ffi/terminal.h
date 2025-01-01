@@ -20,4 +20,10 @@ int crossterm_clear_from_cursor_down(struct crossterm_stream *stream);
 int crossterm_clear_current_line(struct crossterm_stream *stream);
 int crossterm_clear_until_new_line(struct crossterm_stream *stream);
 
+struct crossterm_size {
+    uint16_t width;
+    uint16_t height;
+};
+int crossterm_get_size(struct crossterm_size *size);
+
 #endif

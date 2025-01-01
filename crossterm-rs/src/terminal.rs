@@ -176,3 +176,22 @@ pub unsafe extern "C" fn crossterm_clear_until_new_line(
         0
     }
 }
+
+#[repr(C)]
+pub struct crossterm_size {
+    width: u16,
+    height: u16,
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_get_size(size: *mut crossterm_size) -> libc::c_int {
+    let ret = crossterm::terminal::size();
+    match ret {
+        Ok((width, height)) => {
+            (*size).width = width;
+            (*size).height = height;
+            0
+        }
+        Err(err) => -(crossterm_error::from(err) as i32),
+    }
+}
