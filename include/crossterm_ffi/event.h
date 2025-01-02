@@ -16,12 +16,14 @@
 #define CROSSTERM_NUM_LOCK_KEY_MODIFIER  (0b0000000100000000)
 #define CROSSTERM_ALL_KEY_MODIFIERS      (0b0000000111111111)
 
-typedef void (*crossterm_character_key_event_handler)(uint32_t character, uint16_t modifiers, void *data);
-typedef void (*crossterm_special_key_event_handler)   (uint8_t key,       uint16_t modifiers, void *data);
-typedef void (*crossterm_resize_event_handler)       (uint16_t rows,      uint16_t cols,      void *data);
+enum crossterm_event_type {
+    CROSSTERM_KEY_EVENT,
+    CROSSTERM_RESIZE_EVENT,
+};
 
-enum crossterm_special_key {
-    CROSSTERM_BACKSPACE_KEY = 0,
+enum crossterm_key_type {
+    CROSSTERM_CHAR_KEY = 0,
+    CROSSTERM_BACKSPACE_KEY,
     CROSSTERM_ENTER_KEY,
     CROSSTERM_LEFT_ARROW_KEY,
     CROSSTERM_RIGHT_ARROW_KEY,
@@ -51,34 +53,27 @@ enum crossterm_special_key {
     CROSSTERM_F12_KEY,
 };
 
-struct crossterm_event_handler_registry;
 
-struct crossterm_event_handler_registry *crossterm_event_handler_registry_new(void);
-void crossterm_event_handler_registry_free(struct crossterm_event_handler_registry *);
+struct crossterm_key_event {
+    enum crossterm_key_type type;
+    uint32_t code;
+    uint16_t modifiers;
+};
 
-void crossterm_register_character_key_event_handler(
-    struct crossterm_event_handler_registry *,
-    crossterm_character_key_event_handler character_key_event_handler);
-void crossterm_deregister_character_key_event_handler(
-    struct crossterm_event_handler_registry *);
+struct crossterm_resize_event {
+    uint16_t width;
+    uint16_t height;
+};
 
-void crossterm_register_special_key_event_handler(
-    struct crossterm_event_handler_registry *,
-    crossterm_special_key_event_handler special_key_event_handler);
-void crossterm_deregister_special_key_event_handler(
-    struct crossterm_event_handler_registry *);
+struct crossterm_event {
+    enum crossterm_event_type type;
+    union {
+        struct crossterm_key_event key;
+        struct crossterm_resize_event resize;
+    };
+};
 
-void crossterm_register_resize_event_handler(
-    struct crossterm_event_handler_registry *,
-    crossterm_resize_event_handler resize_event_handler);
-void crossterm_deregister_resize_event_handler(
-    struct crossterm_event_handler_registry *);
-
-void crossterm_set_event_handler_data(
-    struct crossterm_event_handler_registry *,
-    void *handler_data);
-
-int crossterm_event_read(struct crossterm_event_handler_registry *);
+int crossterm_event_read(struct crossterm_event *event);
 int crossterm_event_poll(int *is_available);
 
 // clang-format on
