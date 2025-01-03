@@ -100,16 +100,16 @@ fn pack_key_modifiers(
     use crossterm::event::KeyEventState;
     use crossterm::event::KeyModifiers;
 
-    assert_eq!(KeyModifiers::SHIFT.bits()      as u16,      CROSSTERM_SHIFT_KEY_MODIFIER);
-    assert_eq!(KeyModifiers::CONTROL.bits()    as u16,      CROSSTERM_CONTROL_KEY_MODIFIER);
-    assert_eq!(KeyModifiers::ALT.bits()        as u16,      CROSSTERM_ALT_KEY_MODIFIER);
-    assert_eq!(KeyModifiers::SUPER.bits()      as u16,      CROSSTERM_SUPER_KEY_MODIFIER);
-    assert_eq!(KeyModifiers::HYPER.bits()      as u16,      CROSSTERM_HYPER_KEY_MODIFIER);
-    assert_eq!(KeyModifiers::META.bits()       as u16,      CROSSTERM_META_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::SHIFT.bits()      as u16, CROSSTERM_SHIFT_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::CONTROL.bits()    as u16, CROSSTERM_CONTROL_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::ALT.bits()        as u16, CROSSTERM_ALT_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::SUPER.bits()      as u16, CROSSTERM_SUPER_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::HYPER.bits()      as u16, CROSSTERM_HYPER_KEY_MODIFIER);
+    assert_eq!(KeyModifiers::META.bits()       as u16, CROSSTERM_META_KEY_MODIFIER);
 
-    assert_eq!(KeyEventState::KEYPAD.bits()    as u16 >> 7, CROSSTERM_KEYPAD_KEY_MODIFIER);
-    assert_eq!(KeyEventState::CAPS_LOCK.bits() as u16 >> 7, CROSSTERM_CAPS_LOCK_KEY_MODIFIER);
-    assert_eq!(KeyEventState::NUM_LOCK.bits()  as u16 >> 7, CROSSTERM_NUM_LOCK_KEY_MODIFIER);
+    assert_eq!(KeyEventState::KEYPAD.bits()    as u16, CROSSTERM_KEYPAD_KEY_MODIFIER    >> 6);
+    assert_eq!(KeyEventState::CAPS_LOCK.bits() as u16, CROSSTERM_CAPS_LOCK_KEY_MODIFIER >> 6);
+    assert_eq!(KeyEventState::NUM_LOCK.bits()  as u16, CROSSTERM_NUM_LOCK_KEY_MODIFIER  >> 6);
 
     let mut res = CROSSTERM_NO_KEY_MODIFIERS;
     res |= modifiers.bits() as u16;
