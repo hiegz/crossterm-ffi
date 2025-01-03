@@ -117,6 +117,7 @@ fn pack_key_modifiers(
     return res;
 }
 
+#[rustfmt::skip]
 unsafe fn crossterm_event_read_key(kev: crossterm::event::KeyEvent, event: *mut crossterm_event) {
     use crossterm::event::KeyCode::*;
     use crossterm_event_type::*;
@@ -130,43 +131,43 @@ unsafe fn crossterm_event_read_key(kev: crossterm::event::KeyEvent, event: *mut 
             (*event).v.key.t = CROSSTERM_CHAR_KEY;
             (*event).v.key.code = char as u32;
         }
-        Backspace => (*event).v.key.t = CROSSTERM_BACKSPACE_KEY,
-        Enter => (*event).v.key.t = CROSSTERM_ENTER_KEY,
-        Left => (*event).v.key.t = CROSSTERM_LEFT_ARROW_KEY,
-        Right => (*event).v.key.t = CROSSTERM_RIGHT_ARROW_KEY,
-        Up => (*event).v.key.t = CROSSTERM_UP_ARROW_KEY,
-        Down => (*event).v.key.t = CROSSTERM_DOWN_ARROW_KEY,
-        Home => (*event).v.key.t = CROSSTERM_HOME_KEY,
-        End => (*event).v.key.t = CROSSTERM_END_KEY,
-        PageUp => (*event).v.key.t = CROSSTERM_PAGE_UP_KEY,
-        PageDown => (*event).v.key.t = CROSSTERM_PAGE_DOWN_KEY,
-        Tab => (*event).v.key.t = CROSSTERM_TAB_KEY,
-        BackTab => (*event).v.key.t = CROSSTERM_BACKTAB_KEY,
-        Delete => (*event).v.key.t = CROSSTERM_DELETE_KEY,
-        Insert => (*event).v.key.t = CROSSTERM_INSERT_KEY,
-        Esc => (*event).v.key.t = CROSSTERM_ESCAPE_KEY,
-        F(1) => (*event).v.key.t = CROSSTERM_F1_KEY,
-        F(2) => (*event).v.key.t = CROSSTERM_F2_KEY,
-        F(3) => (*event).v.key.t = CROSSTERM_F3_KEY,
-        F(4) => (*event).v.key.t = CROSSTERM_F4_KEY,
-        F(5) => (*event).v.key.t = CROSSTERM_F5_KEY,
-        F(6) => (*event).v.key.t = CROSSTERM_F6_KEY,
-        F(7) => (*event).v.key.t = CROSSTERM_F7_KEY,
-        F(8) => (*event).v.key.t = CROSSTERM_F8_KEY,
-        F(9) => (*event).v.key.t = CROSSTERM_F9_KEY,
-        F(10) => (*event).v.key.t = CROSSTERM_F10_KEY,
-        F(11) => (*event).v.key.t = CROSSTERM_F11_KEY,
-        F(12) => (*event).v.key.t = CROSSTERM_F12_KEY,
-        F(_) => unreachable!("F what?"),
-        Null => {}
-        CapsLock => {}
-        ScrollLock => {}
-        NumLock => {}
+        Backspace   => (*event).v.key.t = CROSSTERM_BACKSPACE_KEY,
+        Enter       => (*event).v.key.t = CROSSTERM_ENTER_KEY,
+        Left        => (*event).v.key.t = CROSSTERM_LEFT_ARROW_KEY,
+        Right       => (*event).v.key.t = CROSSTERM_RIGHT_ARROW_KEY,
+        Up          => (*event).v.key.t = CROSSTERM_UP_ARROW_KEY,
+        Down        => (*event).v.key.t = CROSSTERM_DOWN_ARROW_KEY,
+        Home        => (*event).v.key.t = CROSSTERM_HOME_KEY,
+        End         => (*event).v.key.t = CROSSTERM_END_KEY,
+        PageUp      => (*event).v.key.t = CROSSTERM_PAGE_UP_KEY,
+        PageDown    => (*event).v.key.t = CROSSTERM_PAGE_DOWN_KEY,
+        Tab         => (*event).v.key.t = CROSSTERM_TAB_KEY,
+        BackTab     => (*event).v.key.t = CROSSTERM_BACKTAB_KEY,
+        Delete      => (*event).v.key.t = CROSSTERM_DELETE_KEY,
+        Insert      => (*event).v.key.t = CROSSTERM_INSERT_KEY,
+        Esc         => (*event).v.key.t = CROSSTERM_ESCAPE_KEY,
+        F(1)        => (*event).v.key.t = CROSSTERM_F1_KEY,
+        F(2)        => (*event).v.key.t = CROSSTERM_F2_KEY,
+        F(3)        => (*event).v.key.t = CROSSTERM_F3_KEY,
+        F(4)        => (*event).v.key.t = CROSSTERM_F4_KEY,
+        F(5)        => (*event).v.key.t = CROSSTERM_F5_KEY,
+        F(6)        => (*event).v.key.t = CROSSTERM_F6_KEY,
+        F(7)        => (*event).v.key.t = CROSSTERM_F7_KEY,
+        F(8)        => (*event).v.key.t = CROSSTERM_F8_KEY,
+        F(9)        => (*event).v.key.t = CROSSTERM_F9_KEY,
+        F(10)       => (*event).v.key.t = CROSSTERM_F10_KEY,
+        F(11)       => (*event).v.key.t = CROSSTERM_F11_KEY,
+        F(12)       => (*event).v.key.t = CROSSTERM_F12_KEY,
+        F(_)        => unreachable!("F what?"),
+        Null        => {}
+        CapsLock    => {}
+        ScrollLock  => {}
+        NumLock     => {}
         PrintScreen => {}
-        Pause => {}
-        Menu => {}
+        Pause       => {}
+        Menu        => {}
         KeypadBegin => {}
-        Media(_) => {}
+        Media(_)    => {}
         Modifier(_) => {}
     }
 }
