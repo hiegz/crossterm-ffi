@@ -56,7 +56,7 @@ enum crossterm_key_type {
 
 struct crossterm_key_event {
     enum crossterm_key_type type;
-    uint32_t code;
+    uint8_t code[4];
     uint16_t modifiers;
 };
 

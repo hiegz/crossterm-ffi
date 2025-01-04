@@ -67,7 +67,7 @@ pub enum crossterm_key_type {
 #[derive(Copy, Clone)]
 pub struct crossterm_key_event {
     t: crossterm_key_type,
-    code: u32,
+    code: [u8; 4],
     modifiers: u16,
 }
 
@@ -129,7 +129,7 @@ unsafe fn crossterm_event_read_key(kev: crossterm::event::KeyEvent, event: *mut 
     match kev.code {
         Char(char) => {
             (*event).v.key.t = CROSSTERM_CHAR_KEY;
-            (*event).v.key.code = char as u32;
+            char.encode_utf8(&mut (*event).v.key.code);
         }
         Backspace   => (*event).v.key.t = CROSSTERM_BACKSPACE_KEY,
         Enter       => (*event).v.key.t = CROSSTERM_ENTER_KEY,
