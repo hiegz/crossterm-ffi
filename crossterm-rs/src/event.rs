@@ -184,7 +184,7 @@ pub unsafe extern "C" fn crossterm_event_read(event: *mut crossterm_event) -> li
             Key(kev) => crossterm_event_read_key(kev, event),
             Mouse(_) => {}
             Paste(_) => {}
-            Resize(rows, cols) => {
+            Resize(cols, rows) => {
                 (*event).t = CROSSTERM_RESIZE_EVENT;
                 (*event).v.resize.width = cols;
                 (*event).v.resize.height = rows;
