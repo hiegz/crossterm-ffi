@@ -5,6 +5,7 @@ pub enum crossterm_error {
     CROSSTERM_SUCCESS = 0,
     CROSSTERM_EUNDEF,
     CROSSTERM_EOS,
+    CROSSTERM_EINVAL,
 }
 
 fn to_const_char_ptr(str: &'static str) -> *const libc::c_char {
@@ -30,7 +31,7 @@ pub unsafe extern "C" fn crossterm_strerror(error: crossterm_error) -> *const li
     match error {
         CROSSTERM_SUCCESS => to_const_char_ptr("success"),
         CROSSTERM_EOS => libc::strerror(*libc::__errno_location()),
+        CROSSTERM_EINVAL => libc::strerror(libc::EINVAL),
         _ => to_const_char_ptr("undefined error"),
     }
 }
-
