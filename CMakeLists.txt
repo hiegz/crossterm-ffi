@@ -20,6 +20,11 @@ project(crossterm_ffi
         LANGUAGES C)
 
 add_custom_target(
+    cargo_test
+    cargo test
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/crossterm-rs)
+
+add_custom_target(
     build
     cargo build --release
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/crossterm-rs)

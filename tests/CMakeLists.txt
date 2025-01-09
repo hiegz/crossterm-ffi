@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 add_custom_target(check)
+add_dependencies(check cargo_test)
 
 function(add_single_file_test)
     set(options)
