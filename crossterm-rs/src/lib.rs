@@ -1,5 +1,6 @@
 #![allow(non_camel_case_types)]
 
+mod attributes;
 mod color;
 mod cursor;
 mod error;
