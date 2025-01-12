@@ -3,7 +3,6 @@ use libc;
 use crate::error::crossterm_error;
 use crate::style::crossterm_style;
 use crate::style::from_ffi_style_to_rust_style;
-use crate::uint21_t::crossterm_uint21_t;
 
 #[repr(C)]
 pub struct crossterm_stream {
@@ -53,7 +52,7 @@ pub unsafe extern "C" fn crossterm_stream_new(file: *mut libc::FILE) -> *mut cro
 #[no_mangle]
 pub unsafe extern "C" fn crossterm_stream_write(
     stream: *mut crossterm_stream,
-    buf: *const crossterm_uint21_t,
+    buf: *const u8,
     buflen: libc::size_t,
     style: *const crossterm_style,
 ) -> libc::c_int {
@@ -66,14 +65,11 @@ pub unsafe extern "C" fn crossterm_stream_write(
         ContentStyle::default()
     };
 
-    let mut content = String::default();
-    for i in 0..buflen {
-        let ret = std::char::from_u32(*buf.offset(i as isize));
-        if let None = ret {
-            return -(crossterm_error::CROSSTERM_EINVAL as i32);
-        }
-        content.push(ret.unwrap());
+    let ret = std::str::from_utf8(std::slice::from_raw_parts(buf, buflen));
+    if let Err(_) = ret {
+        return -(crossterm_error::CROSSTERM_EINVAL as i32);
     }
+    let content = ret.unwrap();
 
     let ret = crossterm::queue!(&mut *stream, PrintStyledContent(style.apply(content)));
     if let Err(err) = ret {
