@@ -2,6 +2,8 @@
 #define CROSSTERM_FFI_EVENT_H
 // clang-format off
 
+#include <crossterm_ffi/uint21_t.h>
+
 #include <stdint.h>
 
 #define CROSSTERM_NO_KEY_MODIFIERS       (0)
@@ -56,7 +58,7 @@ enum crossterm_key_type {
 
 struct crossterm_key_event {
     enum crossterm_key_type type;
-    uint8_t code[4];
+    crossterm_uint21_t code;
     uint16_t modifiers;
 };
 

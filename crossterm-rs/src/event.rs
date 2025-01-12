@@ -1,6 +1,7 @@
 use libc;
 
 use crate::error::crossterm_error;
+use crate::uint21_t::crossterm_uint21_t;
 
 #[rustfmt::skip]
 mod unformatted {
@@ -67,7 +68,7 @@ pub enum crossterm_key_type {
 #[derive(Copy, Clone)]
 pub struct crossterm_key_event {
     t: crossterm_key_type,
-    code: [u8; 4],
+    code: crossterm_uint21_t,
     modifiers: u16,
 }
 
@@ -129,7 +130,7 @@ unsafe fn crossterm_event_read_key(kev: crossterm::event::KeyEvent, event: *mut 
     match kev.code {
         Char(char) => {
             (*event).v.key.t = CROSSTERM_CHAR_KEY;
-            char.encode_utf8(&mut (*event).v.key.code);
+            (*event).v.key.code = char as u32;
         }
         Backspace   => (*event).v.key.t = CROSSTERM_BACKSPACE_KEY,
         Enter       => (*event).v.key.t = CROSSTERM_ENTER_KEY,

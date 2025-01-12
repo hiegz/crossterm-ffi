@@ -8,3 +8,4 @@ mod event;
 mod stream;
 mod style;
 mod terminal;
+mod uint21_t;
