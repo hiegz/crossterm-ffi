@@ -50,6 +50,9 @@ pub unsafe extern "C" fn crossterm_move_cursor_up(
     stream: *mut crossterm_stream,
     nrows: u16,
 ) -> libc::c_int {
+    if nrows == 0 {
+        return 0;
+    }
     let ret = crossterm::queue!((&mut *stream), crossterm::cursor::MoveUp(nrows));
     if let Err(err) = ret {
         -(crossterm_error::from(err) as i32)
@@ -63,6 +66,9 @@ pub unsafe extern "C" fn crossterm_move_cursor_down(
     stream: *mut crossterm_stream,
     nrows: u16,
 ) -> libc::c_int {
+    if nrows == 0 {
+        return 0;
+    }
     let ret = crossterm::queue!((&mut *stream), crossterm::cursor::MoveDown(nrows));
     if let Err(err) = ret {
         -(crossterm_error::from(err) as i32)
@@ -76,6 +82,9 @@ pub unsafe extern "C" fn crossterm_move_cursor_left(
     stream: *mut crossterm_stream,
     ncols: u16,
 ) -> libc::c_int {
+    if ncols == 0 {
+        return 0;
+    }
     let ret = crossterm::queue!((&mut *stream), crossterm::cursor::MoveLeft(ncols));
     if let Err(err) = ret {
         -(crossterm_error::from(err) as i32)
@@ -89,6 +98,9 @@ pub unsafe extern "C" fn crossterm_move_cursor_right(
     stream: *mut crossterm_stream,
     ncols: u16,
 ) -> libc::c_int {
+    if ncols == 0 {
+        return 0;
+    }
     let ret = crossterm::queue!((&mut *stream), crossterm::cursor::MoveRight(ncols));
     if let Err(err) = ret {
         -(crossterm_error::from(err) as i32)
@@ -129,6 +141,9 @@ pub unsafe extern "C" fn crossterm_move_cursor_to_next_line(
     stream: *mut crossterm_stream,
     nlines: u16,
 ) -> libc::c_int {
+    if nlines == 0 {
+        return 0;
+    }
     let ret = crossterm::queue!((&mut *stream), crossterm::cursor::MoveToNextLine(nlines));
     if let Err(err) = ret {
         -(crossterm_error::from(err) as i32)
@@ -142,6 +157,9 @@ pub unsafe extern "C" fn crossterm_move_cursor_to_previous_line(
     stream: *mut crossterm_stream,
     nlines: u16,
 ) -> libc::c_int {
+    if nlines == 0 {
+        return 0;
+    }
     let ret = crossterm::queue!(
         (&mut *stream),
         crossterm::cursor::MoveToPreviousLine(nlines)
