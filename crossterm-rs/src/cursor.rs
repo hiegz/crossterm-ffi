@@ -21,6 +21,27 @@ pub unsafe extern "C" fn crossterm_hide_cursor(stream: *mut crossterm_stream) ->
     }
 }
 
+#[repr(C)]
+pub struct crossterm_cursor_positon {
+    x: u16,
+    y: u16,
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn crossterm_get_cursor_position(
+    position: *mut crossterm_cursor_positon,
+) -> libc::c_int {
+    let ret = crossterm::cursor::position();
+    match ret {
+        Ok((x, y)) => {
+            (*position).x = x;
+            (*position).y = y;
+            0
+        }
+        Err(err) => -(crossterm_error::from(err) as i32),
+    }
+}
+
 #[no_mangle]
 pub unsafe extern "C" fn crossterm_save_cursor_position(
     stream: *mut crossterm_stream,

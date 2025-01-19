@@ -5,8 +5,14 @@
 
 struct crossterm_stream;
 
+struct crossterm_cursor_position {
+    uint16_t x;
+    uint16_t y;
+};
+
 int crossterm_show_cursor(struct crossterm_stream *stream);
 int crossterm_hide_cursor(struct crossterm_stream *stream);
+int crossterm_get_cursor_position(struct crossterm_cursor_position *position);
 int crossterm_save_cursor_position(struct crossterm_stream *stream);
 int crossterm_restore_cursor_position(struct crossterm_stream *stream);
 int crossterm_move_cursor_up(struct crossterm_stream *stream, uint16_t nrows);
