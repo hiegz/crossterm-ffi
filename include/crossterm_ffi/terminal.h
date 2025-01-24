@@ -1,10 +1,12 @@
 #ifndef CROSSTERM_FFI_TERMINAL_H
 #define CROSSTERM_FFI_TERMINAL_H
 
+#include <stdbool.h>
 #include <stdint.h>
 
 struct crossterm_stream;
 
+int crossterm_is_raw_mode_enabled(bool *is_enabled);
 int crossterm_enable_raw_mode(void);
 int crossterm_disable_raw_mode(void);
 int crossterm_enter_alternate_screen(struct crossterm_stream *stream);
