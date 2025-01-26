@@ -18,6 +18,8 @@
 #define CROSSTERM_NUM_LOCK_KEY_MODIFIER  (1 << 8)
 #define CROSSTERM_ALL_KEY_MODIFIERS      (0x1FF)
 
+typedef uint16_t crossterm_key_modifiers;
+
 enum crossterm_event_type {
     CROSSTERM_KEY_EVENT,
     CROSSTERM_RESIZE_EVENT,
@@ -59,7 +61,7 @@ enum crossterm_key_type {
 struct crossterm_key_event {
     enum crossterm_key_type type;
     crossterm_uint21_t code;
-    uint16_t modifiers;
+    crossterm_key_modifiers modifiers;
 };
 
 struct crossterm_resize_event {
