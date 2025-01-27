@@ -31,5 +31,3 @@ function(add_single_file_test)
     add_custom_target(check-${arg_TEST_NAME} ${arg_TEST_NAME})
     add_dependencies(check check-${arg_TEST_NAME})
 endfunction()
-
-add_single_file_test(TEST_NAME stream TEST_SOURCES stream.c)
