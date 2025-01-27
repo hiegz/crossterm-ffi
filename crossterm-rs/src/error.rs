@@ -1,9 +1,11 @@
 use libc;
 
 #[repr(C)]
+#[derive(Debug)]
 pub enum crossterm_error {
     CROSSTERM_SUCCESS = 0,
     CROSSTERM_EUNDEF,
+    CROSSTERM_EOTHER,
     CROSSTERM_EOS,
     CROSSTERM_EINVAL,
 }
@@ -19,6 +21,8 @@ impl From<std::io::Error> for crossterm_error {
                 *libc::__errno_location() = eos;
             }
             return crossterm_error::CROSSTERM_EOS;
+        } else if err.kind() == std::io::ErrorKind::Other {
+            return crossterm_error::CROSSTERM_EOTHER;
         } else {
             return crossterm_error::CROSSTERM_EUNDEF;
         }
@@ -32,6 +36,15 @@ pub unsafe extern "C" fn crossterm_strerror(error: crossterm_error) -> *const li
         CROSSTERM_SUCCESS => to_const_char_ptr("success"),
         CROSSTERM_EOS => libc::strerror(*libc::__errno_location()),
         CROSSTERM_EINVAL => libc::strerror(libc::EINVAL),
+        // CROSSTERM_EOTHER => to_const_char_ptr("other"),
         _ => to_const_char_ptr("undefined error"),
     }
 }
+
+impl std::fmt::Display for crossterm_error {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl std::error::Error for crossterm_error {}
