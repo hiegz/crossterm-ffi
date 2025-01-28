@@ -158,6 +158,19 @@ pub unsafe extern "C" fn crossterm_move_cursor_to_row(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn crossterm_move_cursor_to_col(
+    stream: *mut crossterm_stream,
+    col: u16,
+) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), crossterm::cursor::MoveToColumn(col));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        0
+    }
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn crossterm_move_cursor_to_next_line(
     stream: *mut crossterm_stream,
     nlines: u16,
