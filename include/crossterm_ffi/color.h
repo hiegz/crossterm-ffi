@@ -4,6 +4,8 @@
 #include <stdint.h>
 
 enum crossterm_color_type {
+    CROSSTERM_RESET_COLOR,
+
     CROSSTERM_BLACK_COLOR,
     CROSSTERM_WHITE_COLOR,
 

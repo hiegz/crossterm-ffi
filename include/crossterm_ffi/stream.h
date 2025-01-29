@@ -1,10 +1,10 @@
 #ifndef CROSSTERM_FFI_STREAM_H
 #define CROSSTERM_FFI_STREAM_H
 
+#include <stddef.h>
 #include <stdint.h>
-#include <stdio.h>
 
-struct crossterm_style;
+#include <crossterm_ffi/color.h>
 
 /// @brief Represents a generic stream.
 struct crossterm_stream {
@@ -27,22 +27,23 @@ struct crossterm_stream {
     int (*flush_fn)(void *context);
 };
 
-///
-/// @brief   Writes the specified number of bytes from the buffer to a generic
-///          stream applying the given style.
-///
-/// @returns 0 on success. On failure, returns a negative error code.
-///
-int crossterm_stream_write(const struct crossterm_stream *stream,
-                           const uint8_t *buf, size_t buflen,
-                           const struct crossterm_style *style);
+// clang-format off
+int crossterm_stream_set_foreground_color(struct crossterm_stream *stream, const struct crossterm_color *color);
+int crossterm_stream_set_background_color(struct crossterm_stream *stream, const struct crossterm_color *color);
 
-///
-/// @brief   Flushes the given stream, ensuring that all intermediately
-///          buffered contents reach their destination.
-///
-/// @returns 0 on success. On failure, returns a negative error code.
-///
-int crossterm_stream_flush(const struct crossterm_stream *stream);
+int crossterm_stream_set_bold_attribute(struct crossterm_stream *stream);
+int crossterm_stream_reset_bold_attribute(struct crossterm_stream *stream);
+int crossterm_stream_set_dim_attribute(struct crossterm_stream *stream);
+int crossterm_stream_reset_dim_attribute(struct crossterm_stream *stream);
+int crossterm_stream_set_underlined_attribute(struct crossterm_stream *stream);
+int crossterm_stream_reset_underlined_attribute(struct crossterm_stream *stream);
+int crossterm_stream_set_reverse_attribute(struct crossterm_stream *stream);
+int crossterm_stream_reset_reverse_attribute(struct crossterm_stream *stream);
+int crossterm_stream_set_hidden_attribute(struct crossterm_stream *stream);
+int crossterm_stream_reset_hidden_attribute(struct crossterm_stream *stream);
+
+int crossterm_stream_reset_attributes(struct crossterm_stream *stream);
+
+// clang-format on
 
 #endif

@@ -2,6 +2,8 @@ use crossterm;
 
 #[repr(C)]
 pub enum crossterm_color_type {
+    RESET_COLOR,
+
     BLACK_COLOR,
     WHITE_COLOR,
 
@@ -57,6 +59,7 @@ pub fn from_ffi_color_to_rust_color(color: &crossterm_color) -> crossterm::style
 
     unsafe {
         match color.t {
+            RESET_COLOR => Color::Reset,
             BLACK_COLOR => Color::Black,
             WHITE_COLOR => Color::White,
             RED_COLOR => Color::Red,
@@ -93,6 +96,15 @@ mod test {
     use super::from_ffi_color_to_rust_color;
 
     use crossterm::style::Color;
+
+    #[test]
+    fn reset_color_cast() {
+        let ffi_color = crossterm_color {
+            t: RESET_COLOR,
+            v: unsafe { std::mem::zeroed() },
+        };
+        assert_eq!(from_ffi_color_to_rust_color(&ffi_color), Color::Reset);
+    }
 
     #[test]
     fn black_color_cast() {

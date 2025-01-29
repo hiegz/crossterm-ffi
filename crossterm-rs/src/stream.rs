@@ -1,8 +1,13 @@
 use libc;
 
+use crossterm::style::Attribute;
+use crossterm::style::SetAttribute;
+
+use crate::color::crossterm_color;
+use crate::color::from_ffi_color_to_rust_color;
 use crate::error::crossterm_error;
-use crate::style::crossterm_style;
-use crate::style::from_ffi_style_to_rust_style;
+
+use crossterm;
 
 #[repr(C)]
 pub struct crossterm_stream {
@@ -41,42 +46,151 @@ impl std::io::Write for crossterm_stream {
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn crossterm_stream_write(
+pub unsafe fn crossterm_stream_set_foreground_color(
     stream: *mut crossterm_stream,
-    buf: *const u8,
-    buflen: libc::size_t,
-    style: *const crossterm_style,
+    color: *const crossterm_color,
 ) -> libc::c_int {
-    use crossterm::style::ContentStyle;
-    use crossterm::style::PrintStyledContent;
-
-    let style = if !style.is_null() {
-        from_ffi_style_to_rust_style(&*style)
-    } else {
-        ContentStyle::default()
-    };
-
-    let ret = std::str::from_utf8(std::slice::from_raw_parts(buf, buflen));
-    if let Err(_) = ret {
-        return -(crossterm_error::CROSSTERM_EINVAL as i32);
-    }
-    let content = ret.unwrap();
-
-    let ret = crossterm::queue!(&mut *stream, PrintStyledContent(style.apply(content)));
+    let ret = crossterm::queue!(
+        (&mut *stream),
+        crossterm::style::SetForegroundColor(from_ffi_color_to_rust_color(&*color))
+    );
     if let Err(err) = ret {
-        return -(crossterm_error::from(err) as i32);
-    };
-
-    return 0;
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn crossterm_stream_flush(stream: *mut crossterm_stream) -> libc::c_int {
-    let stream = &mut *stream as &mut dyn std::io::Write;
-    let result = stream.flush();
-    if let Err(err) = result {
+pub unsafe fn crossterm_stream_set_background_color(
+    stream: *mut crossterm_stream,
+    color: *const crossterm_color,
+) -> libc::c_int {
+    let ret = crossterm::queue!(
+        (&mut *stream),
+        crossterm::style::SetBackgroundColor(from_ffi_color_to_rust_color(&*color))
+    );
+    if let Err(err) = ret {
         -(crossterm_error::from(err) as i32)
     } else {
-        0
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_set_bold_attribute(stream: *mut crossterm_stream) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::Bold));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_reset_bold_attribute(stream: *mut crossterm_stream) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::NormalIntensity));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_set_dim_attribute(stream: *mut crossterm_stream) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::Dim));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_reset_dim_attribute(stream: *mut crossterm_stream) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::NormalIntensity));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_set_underlined_attribute(
+    stream: *mut crossterm_stream,
+) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::Underlined));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_reset_underlined_attribute(
+    stream: *mut crossterm_stream,
+) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::NoUnderline));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_set_reverse_attribute(stream: *mut crossterm_stream) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::Reverse));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_reset_reverse_attribute(
+    stream: *mut crossterm_stream,
+) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::NoReverse));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_set_hidden_attribute(stream: *mut crossterm_stream) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::Hidden));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_reset_hidden_attribute(
+    stream: *mut crossterm_stream,
+) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::NoHidden));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
+    }
+}
+
+#[no_mangle]
+pub unsafe fn crossterm_stream_reset_attributes(stream: *mut crossterm_stream) -> libc::c_int {
+    let ret = crossterm::queue!((&mut *stream), SetAttribute(Attribute::Reset));
+    if let Err(err) = ret {
+        -(crossterm_error::from(err) as i32)
+    } else {
+        return 0;
     }
 }
